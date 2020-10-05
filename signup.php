@@ -2,34 +2,33 @@
 
 include "Database.php";
 
-$db = new Database("localhost", "root", "", "project1", "utf8");
-
-
-//$voornaam = $_POST['voornaam'];
-//$tussenvoegsel = $_POST['achternaam'];
-//$email = $_POST['email'];
-//$username = $_POST['username'];
 
 $id = null;
 
-if (isset($_POST["password"]) && isset($_POST["repeatPassword"]))
-{
+$fieldNames = array("voornaam", "achternaam", "email","username","password");
+
+$error = false;
+
+foreach ($fieldNames as $fieldName) {
+    if(!isset($_POST["$fieldName"]) || empty($_POST["$fieldName"])) {
+        $error = true;
+    }
+}
+
+if (!$error) {
+    $db = new Database("localhost", "root", "", "project1", "utf8");
 
     $password = $_POST['password'];
-    $email = $_POST['repeatPassword'];
-    $db->insertAccount($email, $password);
-    echo $password;
-    echo $email;
-}
-else
-{
-    $user = null;
-}
+    $achternaam = $_POST['achternaam'];
+    $voornaam = $_POST['voornaam'];
+    $tussenvoegsel = $_POST['achternaam'];
+    $email = $_POST['email'];
+    $username = $_POST['username'];
 
-
+    $db->insertAccount($voornaam, $tussenvoegsel, $achternaam, $email, $username, $password);
+}
 
 ?>
-
 
 
 <!DOCTYPE html>

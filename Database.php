@@ -44,7 +44,7 @@ class database
     }
 
 
-    public function insertAccount($email, $password)
+    public function insertAccount($voornaam, $tussenvoegsel, $achternaam, $email, $username, $password)
     {
         // prepared statements =
         // only proper way to run a query when a variable is used.
@@ -58,25 +58,24 @@ class database
             $this->db->beginTransaction();
             echo "1. transacion begon";
 
-            $sql1 = "INSERT INTO account(id, email, password) VALUES(:email, :password)";
-            echo '<br> 2. sql statement:' . $sql1;
-            $stmt = $this->db->prepare($sql1);
-            echo "<br> 3.";
-            print_r($stmt);
+            $pdo1 = "INSERT INTO account AND persoon (voornaam, tussenvoegsel, achternaam, email, username, password) 
+                VALUES ('$voornaam', '$tussenvoegsel', '$achternaam', '$email', '$username', '$password')";
+            $stmt = $this->db->prepare($pdo1);
+            print_r($pdo1);
+
+            $stmtExecute = $stmt->execute(['voornaam'=>$voornaam, 'tussenvoegsel'=>$tussenvoegsel, 'achternaam'=>$achternaam,
+                'email'=>$email, 'username'=>$username, 'password'=>$password]);
 
             $hashPassword = password_hash($password, PASSWORD_DEFAULT);
             $stmt->execute(['email'=>$email, 'password'=>$hashPassword]);
-            echo '<br> password: ' . $hashPassword . '<br>';
 
             $lastId = $this->db->lastInsertId();
-            echo $lastId;
             $this->db->commit();
 
         } catch (Exception $a) {
             $this->db->rollBack();
             throw $a;
         }
-
 
 //
 //        $sql = 'SELECT * FROM account WHERE email=$email AND statement =$statement ';
