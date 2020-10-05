@@ -2,7 +2,6 @@
 
 include "Database.php";
 
-
 $id = null;
 
 $fieldNames = array("voornaam", "achternaam", "email","username","password");
@@ -26,10 +25,9 @@ if (!$error) {
     $username = $_POST['username'];
 
     $db->insertAccount($voornaam, $tussenvoegsel, $achternaam, $email, $username, $password);
+
 }
-
 ?>
-
 
 <!DOCTYPE html>
 <html>
