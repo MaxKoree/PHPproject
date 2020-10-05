@@ -1,5 +1,6 @@
+
 <?php
-class Database
+class database
 {
 
 
@@ -43,7 +44,7 @@ class Database
     }
 
 
-    public function executeQueryExample()
+    public function insertAccount($email, $password)
     {
         // prepared statements =
         // only proper way to run a query when a variable is used.
@@ -51,27 +52,45 @@ class Database
         /*
         prepare() -> returns PDOStatement object without data being attached to it.
         execute() -> will be able to get resulting data of statement (if applicable)
-
-
-
         */
-        //prepared statements are usefull agianst sql injections.
-        $sql = "select * FROM account WHERE email=$email AND status=$status";
-        $statement = $this->db->prepare($query);
-        $statement->execute();
-        $statement->fetch();
+
+        try {
+            $this->db->beginTransaction();
+            echo "1. transacion begon";
+
+            $sql1 = "INSERT INTO account(id, email, password) VALUES(:email, :password)";
+            echo '<br> 2. sql statement:' . $sql1;
+            $stmt = $this->db->prepare($sql1);
+            echo "<br> 3.";
+            print_r($stmt);
+
+            $hashPassword = password_hash($password, PASSWORD_DEFAULT);
+            $stmt->execute(['email'=>$email, 'password'=>$hashPassword]);
+            echo '<br> password: ' . $hashPassword . '<br>';
+
+            $lastId = $this->db->lastInsertId();
+            echo $lastId;
+            $this->db->commit();
+
+        } catch (Exception $a) {
+            $this->db->rollBack();
+            throw $a;
+        }
 
 
-        $sql = 'SELECT * FROM account WHERE email=? AND status=?';
-        $statement = $this->db->prepare($query);
-        $statement->execute([$email, $status]);
-        $statement->fetch();
-
-
-        $sql = 'SELECT * FROM account WHERE email=:email AND status=:status';
-        $statement = $this->db->prepare($query);
-        $statement->execute(['email' => $email, 'status' => $status]);
-        $statement->fetch();
+//
+//        $sql = 'SELECT * FROM account WHERE email=$email AND statement =$statement ';
+//        $statement = $this->db->prepare($sql);
+//        $statement->execute([$email, $statement]);
+//        $statement->fetch();
+//
+//
+//        $sql = 'SELECT * FROM account WHERE email=:email AND status=:status';
+//        $statement = $this->db->prepare($sql);
+//        $statement->execute(['email' => $email, 'status' => $statement]);
+//        $statement->fetch();
     }
 }
 ?>
+
+}
