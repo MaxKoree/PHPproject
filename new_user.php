@@ -8,11 +8,6 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true){
 }
 
 
-
-//https://www.allphptricks.com/insert-view-edit-and-delete-record-from-database-using-php-and-mysqli/
-
-
-
 ?>
 
 <html>
